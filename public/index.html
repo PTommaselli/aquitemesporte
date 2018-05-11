@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+  <style type="text/css">
+    *{
+      font-family: 'Roboto', sans-serif;
+    }
+  </style>
+	<title>EsportesDourados</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+	<meta name="viewport" content="initial-scale=1.0">
+	<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+  <link rel="stylesheet" type="text/css" href="css/style-map.css">
+	<script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
+
+
+  <link rel="stylesheet" type="text/css" href="css/menu-style.css">
+	<link rel="stylesheet" type="text/css" href="css/card-style.css">
+  <link rel="stylesheet" type="text/css" href="css/search-style.css"
+  <link rel="stylesheet" type="text/css" href="css/list_loc-style.css">
+  <link rel="stylesheet" type="text/css" href="css/listmenu.css">
+  <link rel="stylesheet" type="text/css" href="css/animate.css">
+
+	<!-- google material -->
+	<script src="https://code.getmdl.io/1.3.0/material.min.js"></script> <!-- elemento -->
+
+  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css"> <!-- diretorio-->
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"> <!-- icon-element -->
+  </head>
+  <meta name="theme-color" content="#1E88E5">
+  <link rel="manifest" href="/manifest.json">
+</head>
+
+
+
+<body>
+
+<div  id="search" class="mdl-shadow--2dp">
+  <input type="text" id="autocomplete">
+  <i  class="material-icons" id="lupa">search</i>
+</div>
+
+<div id="locations_list" class="mdl-card mdl-shadow--2dp">
+
+  <div id="menu_list_loc" class=" mdl-shadow--2dp">
+    <h3 id="title_list_loc">LISTA DE PRAÇAS</h3>
+    <button id="exit_list_loc" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+        <i id="close_loc" class="material-icons">close</i>
+    </button>
+  </div>
+    <ul id="list_loc_body"></ul>
+  
+  </div>
+  
+
+<div id="listSport" class="mdl-card mdl-shadow--2dp">
+
+<div id="menu_list_sport" class=" mdl-shadow--2dp">
+    <h3 id="title_list_sport">LISTA DE ESPORTES</h3>
+    <button id="exit_list_sport" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+        <i id="close_sports" class="material-icons">close</i>
+    </button>
+    
+</div>
+
+
+<div id="icons-list">
+    
+    <a class="btnIcon " id="btn-parquinho">
+      <img class="imgIcon" id="img-parquinho" src="ICONS/icon-parquinho.png" alt="">
+    </a>
+  
+    <a class="btnIcon " id="btn-voleiboll"> 
+      <img class="imgIcon" id="img-volei" src="ICONS/icon-volei.png" alt="">
+    </a>
+  
+    <a class="btnIcon " id="btn-peteca"> 
+      <img class="imgIcon" id="img-peteca" src="ICONS/icon-peteca.png" alt="">
+    </a>
+  
+    <a class="btnIcon " id="btn-bicibleta"> 
+      <img class="imgIcon" id="img-bicicleta" src="ICONS/icon-bicicleta.png" alt="">
+    </a>
+  
+    <a class="btnIcon " id="btn-basquetebol"> 
+      <img class="imgIcon" id="img-basquete" src="ICONS/icon-basquete.png" alt="">
+    </a>
+  
+    <a class="btnIcon " id="btn-skate">
+      <img class="imgIcon" id="img-skate" src="ICONS/icon-skate.png" alt="">
+    </a>
+  
+    <a class="btnIcon " id="btn-slike"> 
+      <img class="imgIcon" id="img-slike" src="ICONS/icon-slike.png" alt="">
+    </a>
+  
+    <a class="btnIcon " id="btn-caminhada"> 
+      <img class="imgIcon" id="img-caminhada" src="ICONS/icon-caminhada.png" alt="">
+    </a>
+  
+    <a class="btnIcon " id="btn-corrida"> 
+      <img class="imgIcon" id="img-corrida" src="ICONS/icon-corrida.png" alt="">
+    </a>
+  
+    <a class="btnIcon " id="btn-patins">
+      <img class="imgIcon" id="img-patins" src="ICONS/icon-patins.png" alt="">
+    </a>
+  
+    <a class="btnIcon " id="btn-futAmericano"> 
+      <img class="imgIcon" id="img-futAmericano" src="ICONS/icon-futAmericano.png" alt="">
+    </a>
+  
+    <a class="btnIcon " id="btn-futebol"> 
+      <img class="imgIcon" id="img-" src="ICONS/icon-futebol.png" alt="">
+    </a>
+  
+    <a class="btnIcon " id="btn-futsal"> 
+      <img class="imgIcon" id="img-" src="ICONS/icon-futsal.png" alt="">
+    </a>
+  
+    <a class="btnIcon " id="btn-academiaArLivre">
+      <img class="imgIcon" id="img-academia" src="ICONS/icon-academia.png" alt="">
+    </a>
+  
+</div>
+
+
+</div>
+
+
+<div id="onoff">
+<div class="demo-card-wide mdl-card mdl-shadow--2dp">
+      <div class="mdl-card__title">
+        <h2 class="mdl-card__title-text" id="title-card"></h2>
+      </div>
+
+      <div class="mdl-card__supporting-text" id="desc-card">  
+      </div>
+
+      <div class="mdl-card__actions mdl-card--border">
+        <a id="btnRota" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+          Traçar Rota
+        </a>
+      </div>
+
+      <div class="mdl-card__menu">
+        <button id="exit" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+          <i  class="material-icons">close</i>
+        </button>
+      </div>
+</div>
+</div>
+
+<div id="menu">
+
+  <button id="initMenu" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect">
+    <i  class="material-icons" id="iconMenu">menu</i>
+    <div id="addColor"></div>
+  </button>
+
+  <div id="splitMenu">
+    <button id="sports" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab animated slideInUp">
+      <i class="material-icons colorIcons" id="iconMenuSport">directions_run</i>
+    </button>
+
+    <button id="locations" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab animated slideInUp">
+      <i  class="material-icons colorIcons" id="iconMenuPlace">place</i>
+    </button>
+
+    <button id="userLoc" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab animated slideInUp">
+      <i  class="material-icons colorIcons" id="iconMenuGPS">my_location</i>
+    </button>
+
+    <button id="favPraca" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab animated slideInUp">
+      <i  class="material-icons colorIcons" id="iconMenuGPS">star</i>
+    </button>
+    <div id="grad" class="animated slideInUp"></div>
+  </div> 
+</div>
+
+
+<div id="map"></div>
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuKKc8ksB76mmvzVvoY8P4vsi7Wrn5Wko&libraries=places"></script>
+
+<script type="text/javascript" src="js/map-config.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+#locations_list{  
+    width: 80%;
+    position: fixed;
+    left: 10%;
+    right: 20%;
+    top: 15%;
+    bottom: 10%; 
+    z-index: 4;
+    display: none;
+}
+  
+#title_list_loc{
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    color: white;
+    margin-left: 10px;
+}
+
+#close_loc{
+    color: white;
+}
+
+#exit_list_loc{
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right: 10px;
+    top: 5px;
+}
+
+#menu_list_loc{
+    display: flex;
+    background:#1E88E5;
+    width: 100%;
+    height: 40px;
+}

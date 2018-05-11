@@ -1,0 +1,56 @@
+#onoff{
+  display: none;
+}
+
+
+.demo-card-wide{
+  height: 400px;
+}
+
+.demo-card-wide.mdl-card {
+  width: 80%;
+  position: fixed;
+  left: 10%;
+  right: 20%;
+  top: 15%;
+  bottom: 10%; 
+  z-index: 3
+}
+
+.demo-card-wide > .mdl-card__title {
+  color: #fff;
+  height: 376px;
+  background: ;
+}
+.demo-card-wide > .mdl-card__menu {
+  color: #fff;
+}
+
+#desc-card{
+  display: flex;
+  flex-wrap: wrap;
+
+}
+
+#imgSport{
+  display: block;
+  width: 25px;
+  height: 25px;
+
+}
+  
+.icon_sports_card{
+  width: 30px;
+  height: 40px;
+}
+
+@media screen and (min-width: 670px){
+  .demo-card-wide.mdl-card {
+    width: 50%;
+    left: 25%;
+    right: 25%;
+    bottom: 10%; 
+  }
+}
+
+

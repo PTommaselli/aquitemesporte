@@ -1,0 +1,92 @@
+:root{
+	--cor-btn-app: #E0E0E0
+}
+
+#initMenu{
+	width: 75px;
+	height: 75px;
+	position: fixed;
+	z-index: 1;
+	background: #1976D2;
+	display: flex;
+	justify-content: center;
+	bottom: 35px;
+	left: 0px;
+	right: 0px; 
+}
+
+#addColor{
+	background: #1E88E5;
+	width: 60px;
+	height: 60px;
+	border-radius: 50px;
+}
+
+#iconMenu{
+	color: white;
+}
+
+.colorIcons{
+	color: #424242;
+}
+
+
+#splitMenu{
+	display: none;
+}
+
+#sports{
+	background: var(--cor-btn-app);
+	width: 55px;
+	height: 55px;
+	position: fixed;
+	z-index: 2;
+	bottom: 35px;
+	left: 70px;
+	right: ;
+}
+
+#locations{
+	background: var(--cor-btn-app);
+	width: 55px;
+	height: 55px;
+	position: fixed;
+	z-index: 2;
+	bottom: 35px;
+	right: 70px;
+}
+
+#userLoc{
+	background: var(--cor-btn-app);
+	width: 40px;
+	height: 40px;
+	position: fixed;
+	z-index: 2;
+	bottom: 100px;
+	right: 100px;
+}
+
+#favPraca{
+	background: var(--cor-btn-app);
+	width: 40px;
+	height: 40px;
+	position: fixed;
+	z-index: 2;
+	bottom: 100px;
+	left: 100px;
+}
+
+#grad {
+  position: fixed;
+  pointer-events: none;  
+  min-height:170px;      
+  width:100%;
+  bottom:0;
+  z-index: 1;           
+  background: -moz-linear-gradient(top, rgba(255,0,0,0) 0%, rgba(255,0,0,1) 120%);
+  background: -webkit-linear-gradient(top, rgba(255,0,0,1) 0%,rgba(255,0,0,1) 130%);
+  background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,1) 280%);
+                     
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#000000',GradientType=0 );
+}
+

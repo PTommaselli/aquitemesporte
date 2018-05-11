@@ -1,0 +1,15 @@
+{
+  "short_name": "EsporteFree",
+  "name": "AQUI TEM ESPORTE LIVRE",
+  "icons": [{
+      "src": "imgs/iconApp.png",
+      "type": "image/png",
+      "sizes": "152x152"
+    }],
+  "start_url": "index.html",
+  //"orientation": "portrait",
+  "background_color": "#1E88E5",
+  "theme_color": "#1E88E5",
+  "display": "standalone"
+  
+}

@@ -1,0 +1,42 @@
+#search{
+	display: flex;
+	height: 55px;
+	width: 80%;
+	position: fixed;
+	z-index: 2;
+	background: white;
+	top: 20px;
+	left: 10%;
+	right: 20%;
+	align-items: center;
+}
+
+#autocomplete{
+	width: 96%;
+	display: flex;
+	margin-right: 2%;
+	margin-left: 2%;
+	height: 30px;
+	margin-top: 10px;
+	border-left: none;
+	border-right: none;
+	border-top: none;
+	outline: none;
+	font-size: 16px;
+	margin-bottom: 5px;
+}
+
+#lupa{
+	position: absolute;
+	right: 10px;
+	color: #E0E0E0;
+}
+
+@media screen and (min-width: 670px){
+	#search{
+		width: 50%;
+		top: 20px;
+		left: 25%;
+		right: 25%;
+	}	
+}
