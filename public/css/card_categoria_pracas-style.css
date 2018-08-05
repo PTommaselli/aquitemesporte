@@ -1,0 +1,116 @@
+#card-categoria-pracas{
+  width: 40%;
+  height: 60%;
+  position: fixed;
+  left: 30%;
+  right: 50%;
+  top: 15%;
+  bottom: 10%;
+  z-index: 3;
+  background-color: #f2f2f2;
+  display: none;
+}
+
+.title-categoria-pracas{
+  background: #1E88E5;
+  height: 50px;
+  color: white;
+  display: flex;
+  align-items: center;
+}
+
+#title-card-pracas{
+  font-size: 35px;
+  flex: 16;
+  margin-left: 20px;
+  width: 100%;
+}
+
+#btn-exit-card-pracas{
+  flex: 1;
+  width: 100%;
+  border-radius: 50px;
+  margin-right: 20px;
+}
+
+#container-list-pracas{
+  height: 90%;
+  overflow: scroll;
+}
+
+.list_pracas{
+  list-style: none;
+  display: flex;
+  align-items: center;
+  width: 95%;
+  border-bottom: 1px solid #dddbdb;
+}
+.img_praca{
+  width: 60px;
+  height: 60px;
+  border-radius: 50px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.nome_praca{
+  font-size: 20px;
+  font-weight: bold;
+  margin-left: 20px;
+  text-align: center;
+}
+.link_item_praca{
+  color: black;
+}
+
+
+@media screen and (max-width: 855px){
+  #title-card-pracas{
+    font-size: 15px;
+    flex: 18;
+    margin-left: 15px;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 670px){
+  #card-categoria-pracas{
+    width: 80%;
+    height: 60%;
+    position: fixed;
+    left: 10%;
+    right: 50%;
+    top: 15%;
+    bottom: 10%;
+    z-index: 3
+  }
+
+  .title-categoria-pracas{
+    background: #1E88E5;
+    height: 50px;
+    color: white;
+    display: flex;
+    align-items: center;
+  }
+
+  #title-card-pracas{
+    font-size: 15px;
+    flex: 18;
+    margin-left: 15px;
+    width: 100%;
+  }
+
+  .nome_praca{
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .img_praca{
+    width: 45px;
+    height: 45px;
+  }
+
+  .list_pracas{
+    margin-left: -30px;
+  }
+
+
+}

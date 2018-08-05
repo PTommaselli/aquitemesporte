@@ -2,13 +2,13 @@
 //Conecção com o firebase
 
 const config = {
-	apiKey: "AIzaSyCSNEPgV3iaR3GnxCByvxWT6fCA7HwLpv4",
+	apiKey: "AIzaSyDuKKc8ksB76mmvzVvoY8P4vsi7Wrn5Wko",
 	authDomain: "ultimo-f7d1e.firebaseapp.com",
 	databaseURL: "https://ultimo-f7d1e.firebaseio.com",
 	projectId: "ultimo-f7d1e",
 	storageBucket: "ultimo-f7d1e.appspot.com",
 	messagingSenderId: "303544299270"
-};	
+};
 firebase.initializeApp(config);
 
 //=============================================
@@ -17,7 +17,6 @@ firebase.initializeApp(config);
 
 const db = firebase.database(); //buscando informações do database.
 const ref = db.ref('pracas'); //pegando a referencia do database.
-
 //=============================================
 
 //Pegando informações da Api do Maps.
@@ -33,7 +32,7 @@ let marker; //Variavel de gereção dos marcadores.
 //===========================MENU=======================================================
 
 //funcao que fecha o menu de opçoes da tela inicial
-let splitMenu = document.querySelector("#initMenu").onclick= function(){ 
+let splitMenu = document.querySelector("#initMenu").onclick= function(){
 	let menu = document.getElementById("splitMenu").style.display;
 
 	if (menu == "block") {
@@ -41,53 +40,43 @@ let splitMenu = document.querySelector("#initMenu").onclick= function(){
 	}else{
 		document.getElementById("splitMenu").style.display = "block";
 	}
-}; 
+};
 
 //fim====================================================================================
 
-//funçao que fecha o menu de categoria de 
-let exit_listSports = document.querySelector("#exit_list_sport").onclick = function(){ 
-	let listSport = document.getElementById("listSport").style.display;
-
-	if (listSport == "block") {
-		document.getElementById("listSport").style.display = "none";
-	}else{
-		document.getElementById("listSport").style.display = "block";
-	}
-}
 
 //fim====================================================================================
 
-let exit_listLoc = document.querySelector("#exit_list_loc").onclick = function(){ 
-	let listSport = document.getElementById("locations_list").style.display;
 
-	if (listSport == "block") {
-		document.getElementById("locations_list").style.display = "none";
-	}else{
-		document.getElementById("locations_list").style.display = "block";
-	}
-}
-
-let btnLoc = document.querySelector("#locations").onclick = function(){ 
-	let listSport = document.getElementById("locations_list").style.display;
-
-	if (listSport == "none") {
-		document.getElementById("locations_list").style.display = "block";
-	}else{
-		document.getElementById("locations_list").style.display = "none";
-	}
-}
 
 //funcao que que abre o menu de modalidades esportes
-let btnSports = document.querySelector("#sports").onclick = function(){ 
-	let listSport = document.getElementById("listSport").style.display;
+let btnSports = document.querySelector("#sports").onclick = function(){
+	let listSport = document.getElementById("card-categoria-esportes").style.display;
 
 	if (listSport == "none") {
-		document.getElementById("listSport").style.display = "block";
+		document.getElementById("card-categoria-esportes").style.display = "block";
 	}else{
-		document.getElementById("listSport").style.display = "none";
+		document.getElementById("card-categoria-esportes").style.display = "none";
+
 	}
 }
+
+//funcao que que fecha o menu de modalidades esportes
+let btnSportsClose = document.querySelector("#btn-exit-card-esportes").onclick = function(){
+	let listSport = document.getElementById("card-categoria-esportes").style.display;
+
+	if (listSport == "block") {
+		document.getElementById("card-categoria-esportes").style.display = "none";
+		 document.querySelector('#locations').disabled = false;
+		 name_list_praca.innerHTML = "";
+		 img_list_praca.src = "";
+	}else{
+		document.getElementById("card-categoria-esportes").style.display = "block";
+		 document.querySelector('#locations').disabled = true;
+	}
+}
+
+
 
 //=======================================================================================
 
@@ -100,18 +89,86 @@ ref.on('value', function(snapshotPracas){ //|Referencía e liga(atribui) o data 
   for (let i = 0; i < pracas.value.length; i++) { //Loop que liga todos os dados do firebase
 	    let cordLat = pracas.value[i].cord.latlng[0]; //busca todas as cordenadas de latitude de todas as pracas
 	    let cordLng = pracas.value[i].cord.latlng[1]; //busca todas as cordenadas de longitude de todas as pracas
-		let name = pracas.value[i].propriedades.nome; //busca o nome de todas as pracas
+			let codPracas = {lat: cordLat, lng: cordLng};//array com as cords de cada praca do database
+			let cordPracasDirection = new google.maps.LatLng(cordLat,cordLng);//metodo para coleta das cordenadas das pracas para a funcaode rotas
 
+			let name = pracas.value[i].propriedades.nome; //busca o nome de todas as pracas
+			let sports = pracas.value[i].esportes;  //busca os esportes de todas as pracas
+			let img = pracas.value[i].propriedades.img; //busca as imagens de todas a pracas
+			let propriedades_praca = pracas.value[i].propriedades;
 
-		let sports = pracas.value[i].esportes;  //busca os esportes de todas as pracas
-		let img = pracas.value[i].propriedades.img; //busca as imagens de todas a pracas
-		let codPracas = {lat: cordLat, lng: cordLng};//array com as cords de cada praca do database
-		let cordPracasDirection = new google.maps.LatLng(cordLat,cordLng);//metodo para coleta das cordenadas das pracas para a funcaode rotas
 
 //=========================================================================================
 
+	const card_pracas = document.querySelector('#locations').onclick = () =>{
+
+		let listPraca = document.getElementById("card-categoria-pracas").style.display;
+
+		let list_praca = document.querySelector('#container-list-pracas');
+		let ul_list_praca = document.createElement('ul');
+		let a_list_praca;
+		let li_list_praca;
+		let img_list_praca;
+		let name_list_praca;
+
+
+		list_praca.appendChild(ul_list_praca);
+
+		  for (let i = 0; i < pracas.value.length; i++){
+
+
+
+				a_list_praca = document.createElement('a');
+				a_list_praca.setAttribute('class', 'link_item_praca');
+
+				li_list_praca = document.createElement('li');
+				li_list_praca.setAttribute('class', 'list_pracas');
+
+				img_list_praca = document.createElement('img');
+				img_list_praca.setAttribute('class', 'img_praca');
+
+				name_list_praca = document.createElement('p');
+				name_list_praca.setAttribute('class', 'nome_praca');
+
+				name_list_praca.innerHTML = pracas.value[i].propriedades.nome;
+				img_list_praca.src = pracas.value[i].propriedades.img;
+
+				li_list_praca.appendChild(img_list_praca);
+				li_list_praca.appendChild(name_list_praca);
+				a_list_praca.appendChild(li_list_praca);
+				ul_list_praca.appendChild(a_list_praca);
+
+
+				//funcao que que fecha o menu de lista de  praças
+				let btnListPracasClose = document.querySelector("#btn-exit-card-pracas").onclick = function(){
+					let listPracas = document.getElementById("card-categoria-pracas").style.display;
+
+					if (listPracas == "block") {
+						document.getElementById("card-categoria-pracas").style.display = "none";
+						 document.querySelector('#locations').disabled = false;
+						 list_praca.innerText = ''
+					}else{
+						document.getElementById("card-categoria-pracas").style.display = "block";
+						 document.querySelector('#locations').disabled = true;
+					}
+				}
+
+				if (listPraca == "none") {
+					document.getElementById("card-categoria-pracas").style.display = "block";
+					document.querySelector('#locations').disabled = true;
+				}else{
+					document.getElementById("card-categoria-pracas").style.display = "none";
+					 document.querySelector('#locations').disabled = false;
+					 list_praca.innerText = ''
+				}
+			}
+
+	}
+
+
+
 //funcao onde fecha o card do local que o usuario escolheu
-		let exit = document.querySelector("#exit").onclick = function(){ 
+		let exit = document.querySelector("#exit").onclick = function(){
 			let card = document.getElementById("onoff").style.display;
 
 			if (card == "block") {
@@ -120,7 +177,7 @@ ref.on('value', function(snapshotPracas){ //|Referencía e liga(atribui) o data 
 			}else{
 				document.getElementById("onoff").style.display = "block";
 			}
-		}; 
+		};
 //fim======================================================================================
 
 //markers, rotas, displays cards
@@ -128,26 +185,13 @@ ref.on('value', function(snapshotPracas){ //|Referencía e liga(atribui) o data 
 //=========================================================================================
 //criacao dos marcadores no mapa
 	    marker = new google.maps.Marker({ //criaçao dos marcadores de todas as pracas
-			position: codPracas, //pegas as cordenadas 
+			position: codPracas, //pegas as cordenadas
 	 		map: map, //indica em qual lugar imprimi os marcadores
 	 		icon: 'imgs/marker-grande.png',//aplicacao do icone personalizado do marcador
 			title: name //quando passa o mouse em cima do marcador ele mostra o nome do local sem precisar clicar
 		});
 		marker.setVisible(true);//tornar o marker visivel
 //fim======================================================================================
-
-
-		document.querySelector("#locations").onclick = function(){
-			let ul_list = document.querySelector("#list_loc_body");
-			 for(let i = 0; i < pracas.value.length; i++){
-				let li_list = document.createElement("li");
-				li_list.setAttribute("class","li_list_ul");
-				li_list.innerHTML ="" +pracas.value[i].propriedades.nome+ "";
-				ul_list.appendChild(li_list);
-
-			 }
-
-		}
 
 //funcao de click e adiçao dos dados do data base no card selecionado
 		marker.addListener("click", function(){ //funcao onde é adicionado o evento de click e a funcao onde gera um "card" com as informacoes da praca selecionada
@@ -162,9 +206,9 @@ ref.on('value', function(snapshotPracas){ //|Referencía e liga(atribui) o data 
 				let ImgCreated = document.createElement("img");//criacao do elemento IMG para que, com o FOR, crie todas imagens das modalidades esportidas de cada praca
 				ImgCreated.setAttribute('class','icon_sports_card');
 				ImgCreated.src = "" +linkSport+ "";//implementando o link da imagem no SRC do elemento IMG no card
-				ImgDesc.appendChild(ImgCreated);//aplicando o elemento IMG no card 
+				ImgDesc.appendChild(ImgCreated);//aplicando o elemento IMG no card
 
-			}) 
+			})
 //fim======================================================================================
 
 			document.querySelector(".demo-card-wide > .mdl-card__title").style.background = "url('"+img+"') center / cover"; // imprime a imagem do local, no card
@@ -178,7 +222,7 @@ ref.on('value', function(snapshotPracas){ //|Referencía e liga(atribui) o data 
 						let userPositionLat = position.coords.latitude;//organizacao das coordenadas de latitude
 						let userPositionLng = position.coords.longitude;//organizacao das coordenadas da longitude
 						userPoint = new google.maps.LatLng(userPositionLat,userPositionLng);//aplicando na variavel userPoint
-							
+
 					});
 				};
 //fim======================================================================================
@@ -188,7 +232,7 @@ ref.on('value', function(snapshotPracas){ //|Referencía e liga(atribui) o data 
 				const rendererOptions = {
 					map: map,
 					suppressMarkers: true
-				};			
+				};
 
 				directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
 				directionsDisplay.setMap(map);
@@ -202,7 +246,7 @@ ref.on('value', function(snapshotPracas){ //|Referencía e liga(atribui) o data 
 				directionsService.route(confgRote, function(result,status){ //tratamento das rotas
 					if(status == 'OK'){ //consicao de erro da rota
 
-						var route = result.routes[0].legs[0]; 
+						var route = result.routes[0].legs[0];
             			createMarkerOrigin(route.start_location);
            				createMarkerEnd(route.end_location);
 
@@ -224,25 +268,32 @@ ref.on('value', function(snapshotPracas){ //|Referencía e liga(atribui) o data 
 				var marker = new google.maps.Marker({
 					position: position,
 					map: map,
-					icon: 'imgs/marker-pequeno.png'
+					icon: 'imgs/marker-pequeno_larang.png'
 				});
 			}
 
 //fim=====================================================================================
-			
+
 
 		});
 
 	};
-	
+
 
 });
+
+
+
+
+
+
+
 
 const DouradosCenter = {lat: -22.223617,lng: -54.812193}; //constante onde contém a latitude e longitude do centro de dourados
 
 //========================================================================================
 google.maps.event.addDomListener(window, "load",function(){ // evento de busca de locais no mapa e funcao de inicializacao de mapa
-	directionsDisplay = new google.maps.DirectionsRenderer();//atributo de direcao no mapa para a geracao das rotas	
+	directionsDisplay = new google.maps.DirectionsRenderer();//atributo de direcao no mapa para a geracao das rotas
 	map = new google.maps.Map(document.getElementById('map'), { //inicializacao do mapa
 		center: DouradosCenter, //centralizacao do mapa, nesse caso o centro da cidade de Dourados-MS
 		zoom: 14 //proximidade da visao do mapa
@@ -254,8 +305,8 @@ google.maps.event.addDomListener(window, "load",function(){ // evento de busca d
 //marcador para o AUTOCOMPLETE, a pesquisa de locais
 	let searchMarker;
 	const brasilCenter = {lat: -14.235004,lng: -51.92528};
- 	searchMarker = new google.maps.Marker({ 
-		position:brasilCenter, 
+ 	searchMarker = new google.maps.Marker({
+		position:brasilCenter,
 		map: map
 	});
 	searchMarker.setVisible(false);
@@ -266,7 +317,7 @@ google.maps.event.addDomListener(window, "load",function(){ // evento de busca d
 	let userLocarionMarker; //variavel onde vai ser guardada a informacao do geolocalizacao do usuario
 	const brasilCenter1 = {lat: -14.235004,lng: -51.92528};//vetor com o centro de Dourados-MS
  	userLocarionMarker = new google.maps.Marker({ //criacao de um novo marcador
-		position:brasilCenter1, 
+		position:brasilCenter1,
 		map: map,
 		icon: 'imgs/loc-pequena.png'
 	});
@@ -285,7 +336,7 @@ google.maps.event.addDomListener(window, "load",function(){ // evento de busca d
 				map.setZoom(16); //aumento do zoon para uma melhor vizualizacao
 				userLocarionMarker.setVisible(true);//marker passa a ser visivel
 
-			}, function(error){//caso der algum erro 
+			}, function(error){//caso der algum erro
 
 				window.alert //alerta caso o localizador nao esteja ligado
 				(`Ligue o Localizador para ver sua localização!!!
@@ -306,14 +357,14 @@ Recarregue a página`);
 
 
 
-		
+
 //================================AUTOCOMPLETE======================================================
 	let inputTxt = document.querySelector("#autocomplete"); //busca o input text no arquivo HTML
 	const search = new google.maps.places.Autocomplete(inputTxt); //constante onde liga as informacoes da api de busca do maps com o input do HTML
-	search.bindTo("bounds",map); //execucao 
+	search.bindTo("bounds",map); //execucao
 
 	search.addListener('place_changed', function(){
-		
+
 
 		let place = search.getPlace();
 

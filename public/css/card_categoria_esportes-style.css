@@ -1,0 +1,104 @@
+#card-categoria-esportes{
+  width: 40%;
+  height: 60%;
+  position: fixed;
+  left: 30%;
+  right: 50%;
+  top: 15%;
+  bottom: 10%;
+  z-index: 3;
+  background-color: #f2f2f2;
+  display: none;
+}
+
+.title-categoria-esportes{
+  background: #1E88E5;
+  height: 50px;
+  color: white;
+  display: flex;
+  align-items: center;
+}
+
+#title-card-esportes{
+  font-size: 35px;
+  flex: 16;
+  margin-left: 20px;
+  width: 100%;
+}
+
+#btn-exit-card-esportes{
+  flex: 1;
+  width: 100%;
+  border-radius: 50px;
+  margin-right: 20px;
+}
+
+.image-categoria{
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  padding: 5px 5px 5px 5px;
+  background-color: white;
+}
+
+#list-esportes{
+  width: 94%;
+  align-items: center;
+  margin-left: 3%;
+}
+
+#container-list-esporte{
+  display: flex;
+  width: 100%;
+  height: 90%;
+  overflow: scroll;
+}
+
+@media screen and (max-width: 855px){
+  #title-card-esportes{
+    font-size: 15px;
+    flex: 18;
+    margin-left: 15px;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 670px){
+  #card-categoria-esportes{
+    width: 80%;
+    height: 60%;
+    position: fixed;
+    left: 10%;
+    right: 50%;
+    top: 15%;
+    bottom: 10%;
+    z-index: 3
+  }
+
+  .title-categoria-esportes{
+    background: #1E88E5;
+    height: 50px;
+    color: white;
+    display: flex;
+    align-items: center;
+  }
+
+  #title-card-esportes{
+    font-size: 15px;
+    flex: 18;
+    margin-left: 15px;
+    width: 100%;
+  }
+
+  #list-esportes{
+    width: 94%;
+    align-items: center;
+    margin-left: 6%;
+  }
+
+  #container-list-esporte{
+    height: 80%;
+  }
+}

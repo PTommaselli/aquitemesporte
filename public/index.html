@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    
+
   <style type="text/css">
     *{
       font-family: 'Roboto', sans-serif;
@@ -20,9 +20,11 @@
   <link rel="stylesheet" type="text/css" href="css/menu-style.css">
 	<link rel="stylesheet" type="text/css" href="css/card-style.css">
   <link rel="stylesheet" type="text/css" href="css/search-style.css"
-  <link rel="stylesheet" type="text/css" href="css/list_loc-style.css">
   <link rel="stylesheet" type="text/css" href="css/listmenu.css">
   <link rel="stylesheet" type="text/css" href="css/animate.css">
+  <link rel="stylesheet" type="text/css" href="css/card_categoria_esportes-style.css">
+  <link rel="stylesheet" type="text/css" href="css/card_categoria_pracas-style.css">
+
 
 	<!-- google material -->
 	<script src="https://code.getmdl.io/1.3.0/material.min.js"></script> <!-- elemento -->
@@ -30,11 +32,9 @@
   <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css"> <!-- diretorio-->
 
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"> <!-- icon-element -->
-  </head>
   <meta name="theme-color" content="#1E88E5">
   <link rel="manifest" href="/manifest.json">
 </head>
-
 
 
 <body>
@@ -44,101 +44,56 @@
   <i  class="material-icons" id="lupa">search</i>
 </div>
 
-<div id="locations_list" class="mdl-card mdl-shadow--2dp">
-
-  <div id="menu_list_loc" class=" mdl-shadow--2dp">
-    <h3 id="title_list_loc">LISTA DE PRAÇAS</h3>
-    <button id="exit_list_loc" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
-        <i id="close_loc" class="material-icons">close</i>
-    </button>
+<div id="card-categoria-pracas" class="demo-card-wide mdl-card mdl-shadow--2dp">
+  <div class="title-categoria-pracas">
+      <h2 id="title-card-pracas">Lista de Praças</h2>
+      <button id="btn-exit-card-pracas" type="button" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+        <i  class="material-icons">close</i>
+      </button>
   </div>
-    <ul id="list_loc_body"></ul>
-  
+  <div id="container-list-pracas">
+    <!--  conteudo -->
   </div>
-  
-
-<div id="listSport" class="mdl-card mdl-shadow--2dp">
-
-<div id="menu_list_sport" class=" mdl-shadow--2dp">
-    <h3 id="title_list_sport">LISTA DE ESPORTES</h3>
-    <button id="exit_list_sport" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
-        <i id="close_sports" class="material-icons">close</i>
-    </button>
-    
 </div>
 
 
-<div id="icons-list">
-    
-    <a class="btnIcon " id="btn-parquinho">
-      <img class="imgIcon" id="img-parquinho" src="ICONS/icon-parquinho.png" alt="">
-    </a>
-  
-    <a class="btnIcon " id="btn-voleiboll"> 
-      <img class="imgIcon" id="img-volei" src="ICONS/icon-volei.png" alt="">
-    </a>
-  
-    <a class="btnIcon " id="btn-peteca"> 
-      <img class="imgIcon" id="img-peteca" src="ICONS/icon-peteca.png" alt="">
-    </a>
-  
-    <a class="btnIcon " id="btn-bicibleta"> 
-      <img class="imgIcon" id="img-bicicleta" src="ICONS/icon-bicicleta.png" alt="">
-    </a>
-  
-    <a class="btnIcon " id="btn-basquetebol"> 
-      <img class="imgIcon" id="img-basquete" src="ICONS/icon-basquete.png" alt="">
-    </a>
-  
-    <a class="btnIcon " id="btn-skate">
-      <img class="imgIcon" id="img-skate" src="ICONS/icon-skate.png" alt="">
-    </a>
-  
-    <a class="btnIcon " id="btn-slike"> 
-      <img class="imgIcon" id="img-slike" src="ICONS/icon-slike.png" alt="">
-    </a>
-  
-    <a class="btnIcon " id="btn-caminhada"> 
-      <img class="imgIcon" id="img-caminhada" src="ICONS/icon-caminhada.png" alt="">
-    </a>
-  
-    <a class="btnIcon " id="btn-corrida"> 
-      <img class="imgIcon" id="img-corrida" src="ICONS/icon-corrida.png" alt="">
-    </a>
-  
-    <a class="btnIcon " id="btn-patins">
-      <img class="imgIcon" id="img-patins" src="ICONS/icon-patins.png" alt="">
-    </a>
-  
-    <a class="btnIcon " id="btn-futAmericano"> 
-      <img class="imgIcon" id="img-futAmericano" src="ICONS/icon-futAmericano.png" alt="">
-    </a>
-  
-    <a class="btnIcon " id="btn-futebol"> 
-      <img class="imgIcon" id="img-" src="ICONS/icon-futebol.png" alt="">
-    </a>
-  
-    <a class="btnIcon " id="btn-futsal"> 
-      <img class="imgIcon" id="img-" src="ICONS/icon-futsal.png" alt="">
-    </a>
-  
-    <a class="btnIcon " id="btn-academiaArLivre">
-      <img class="imgIcon" id="img-academia" src="ICONS/icon-academia.png" alt="">
-    </a>
-  
-</div>
-
-
+<div id="card-categoria-esportes" class="demo-card-wide mdl-card mdl-shadow--2dp">
+  <div class="title-categoria-esportes">
+      <h2 id="title-card-esportes">Lista de Esportes</h2>
+      <button id="btn-exit-card-esportes" type="button" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+        <i  class="material-icons">close</i>
+      </button>
+  </div>
+  <div id="container-list-esporte">
+  <div id="list-esportes" class="list-esportes">
+  <a href="" class="icone-categoria"> <img src="ICONS/icon-academia.png" class="mdl-shadow--2dp image-categoria" alt=""></a>
+  <a href="" class="icone-categoria"> <img src="ICONS/icon-basquete.png" class="mdl-shadow--2dp image-categoria" alt=""></a>
+  <a href="" class="icone-categoria"> <img src="ICONS/icon-bicicleta.png" class="mdl-shadow--2dp image-categoria" alt=""></a>
+  <a href="" class="icone-categoria"> <img src="ICONS/icon-caminhada.png" class="mdl-shadow--2dp image-categoria" alt=""></a>
+  <a href="" class="icone-categoria"> <img src="ICONS/icon-corrida.png" class="mdl-shadow--2dp image-categoria" alt=""></a>
+  <a href="" class="icone-categoria"> <img src="ICONS/icon-futAmericano.png" class="mdl-shadow--2dp image-categoria" alt=""></a>
+  <a href="" class="icone-categoria"> <img src="ICONS/icon-futsal.png" class="mdl-shadow--2dp image-categoria" alt=""></a>
+  <a href="" class="icone-categoria"> <img src="ICONS/icon-futebol.png" class="mdl-shadow--2dp image-categoria" alt=""></a>
+  <a href="" class="icone-categoria"> <img src="ICONS/icon-parquinho.png" class="mdl-shadow--2dp image-categoria" alt=""></a>
+  <a href="" class="icone-categoria"> <img src="ICONS/icon-patins.png" class="mdl-shadow--2dp image-categoria" alt=""></a>
+  <a href="" class="icone-categoria"> <img src="ICONS/icon-peteca.png" class="mdl-shadow--2dp image-categoria" alt=""></a>
+  <a href="" class="icone-categoria"> <img src="ICONS/icon-skate.png" class="mdl-shadow--2dp image-categoria" alt=""></a>
+  <a href="" class="icone-categoria"> <img src="ICONS/icon-slike.png" class="mdl-shadow--2dp image-categoria" alt=""></a>
+  <a href="" class="icone-categoria"> <img src="ICONS/icon-voleideareia.png" class="mdl-shadow--2dp image-categoria" alt=""></a>
+  <a href="" class="icone-categoria"> <img src="ICONS/icon-handbol.png" class="mdl-shadow--2dp image-categoria" alt=""></a>
+  <a href="" class="icone-categoria"> <img src="ICONS/icon-corridaderua.png" class="mdl-shadow--2dp image-categoria" alt=""></a>
+  </div>
+  </div>
 </div>
 
 
 <div id="onoff">
-<div class="demo-card-wide mdl-card mdl-shadow--2dp">
-      <div class="mdl-card__title">
+<div id="card-desc-loc" class="demo-card-wide mdl-card mdl-shadow--2dp">
+      <div id="img-title-card-loc" class="mdl-card__title">
         <h2 class="mdl-card__title-text" id="title-card"></h2>
       </div>
 
-      <div class="mdl-card__supporting-text" id="desc-card">  
+      <div class="mdl-card__supporting-text" id="desc-card">
       </div>
 
       <div class="mdl-card__actions mdl-card--border">
@@ -179,7 +134,7 @@
       <i  class="material-icons colorIcons" id="iconMenuGPS">star</i>
     </button>
     <div id="grad" class="animated slideInUp"></div>
-  </div> 
+  </div>
 </div>
 
 
@@ -187,7 +142,7 @@
 
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuKKc8ksB76mmvzVvoY8P4vsi7Wrn5Wko&libraries=places"></script>
 
-<script type="text/javascript" src="js/map-config.js"></script>
+<script type="text/javascript" src="../js/map-config.js"></script>
 
 </body>
 </html>
