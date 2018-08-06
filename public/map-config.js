@@ -47,8 +47,6 @@ let splitMenu = document.querySelector("#initMenu").onclick= function(){
 
 //fim====================================================================================
 
-
-
 //funcao que que abre o menu de modalidades esportes
 let btnSports = document.querySelector("#sports").onclick = function(){
 	let listSport = document.getElementById("card-categoria-esportes").style.display;
@@ -68,8 +66,6 @@ let btnSportsClose = document.querySelector("#btn-exit-card-esportes").onclick =
 	if (listSport == "block") {
 		document.getElementById("card-categoria-esportes").style.display = "none";
 		 document.querySelector('#locations').disabled = false;
-		 name_list_praca.innerHTML = "";
-		 img_list_praca.src = "";
 	}else{
 		document.getElementById("card-categoria-esportes").style.display = "block";
 		 document.querySelector('#locations').disabled = true;
@@ -91,11 +87,11 @@ ref.on('value', function(snapshotPracas){ //|Referencía e liga(atribui) o data 
 	    let cordLng = pracas.value[i].cord.latlng[1]; //busca todas as cordenadas de longitude de todas as pracas
 			let codPracas = {lat: cordLat, lng: cordLng};//array com as cords de cada praca do database
 			let cordPracasDirection = new google.maps.LatLng(cordLat,cordLng);//metodo para coleta das cordenadas das pracas para a funcaode rotas
-
 			let name = pracas.value[i].propriedades.nome; //busca o nome de todas as pracas
 			let sports = pracas.value[i].esportes;  //busca os esportes de todas as pracas
 			let img = pracas.value[i].propriedades.img; //busca as imagens de todas a pracas
 			let propriedades_praca = pracas.value[i].propriedades;
+
 
 
 //=========================================================================================
@@ -167,6 +163,8 @@ ref.on('value', function(snapshotPracas){ //|Referencía e liga(atribui) o data 
 
 
 
+
+
 //funcao onde fecha o card do local que o usuario escolheu
 		let exit = document.querySelector("#exit").onclick = function(){
 			let card = document.getElementById("onoff").style.display;
@@ -184,7 +182,7 @@ ref.on('value', function(snapshotPracas){ //|Referencía e liga(atribui) o data 
 
 //=========================================================================================
 //criacao dos marcadores no mapa
-	    marker = new google.maps.Marker({ //criaçao dos marcadores de todas as pracas
+	  marker = new google.maps.Marker({ //criaçao dos marcadores de todas as pracas
 			position: codPracas, //pegas as cordenadas
 	 		map: map, //indica em qual lugar imprimi os marcadores
 	 		icon: 'imgs/marker-grande.png',//aplicacao do icone personalizado do marcador
@@ -192,6 +190,47 @@ ref.on('value', function(snapshotPracas){ //|Referencía e liga(atribui) o data 
 		});
 		marker.setVisible(true);//tornar o marker visivel
 //fim======================================================================================
+
+document.querySelector("#list-esportes").onclick = e =>{
+	switch (e.target.id) {
+		case "academia":
+		//Douradao, CEPPER I, CEPPER II, Parque dos Ipes
+		case "basquete":
+		//Parque Alvorada, Parque Antenora Martins, Parque dos Ipes, CEPPER II
+		case "bicicleta":
+		//Parque dos Ipes, Imaculada
+		case "caminhada":
+		//Parque Alvorada, Douradao, CEPPER I, CEPPER II, Imaculada, Parque dos Ipes
+		case "corrida":
+		//Parque Alvorada, Douradao, CEPPER I, CEPPER II, Imaculada, Parque dos Ipes
+		case "futAmericano":
+		//Parque Alvorada,
+		case "futsal":
+		//Parque Alvorada, CEPPER I, CEPPER II, Ginasio, Parque dos Ipes
+		case "futebol":
+		//Parque Antenor Martins,
+		case "parquinho":
+		//Parque Alvorada, CEPPER I, Parque dos Ipes
+		case "patins":
+		//Parque Alvorada,
+		case "peteca":
+		//Parque dos Ipes
+		case "skate":
+		//Parque Alvorada, CEPPER II,
+		case "slike":
+		//Parque dos Ipes
+		case "volei":
+		//CEPPER I, CEPPER II, Ginasio, Parque dos Ipes
+		case "voleideareia":
+		//CEPPER I, Parque dos Ipes
+		case "handbol":
+		//Ginasio
+		case "corridaderua":
+		//Parque dos Ipes
+	}
+}
+
+
 
 //funcao de click e adiçao dos dados do data base no card selecionado
 		marker.addListener("click", function(){ //funcao onde é adicionado o evento de click e a funcao onde gera um "card" com as informacoes da praca selecionada
@@ -215,6 +254,9 @@ ref.on('value', function(snapshotPracas){ //|Referencía e liga(atribui) o data 
 
 //=========================================================================================
 
+
+
+
 //busca da localizacao do usuario para a rota
 			let userPoint;//variavel para a aplicacao da geolocalizacao do usuario
 				if ('geolocation' in navigator) {
@@ -228,7 +270,11 @@ ref.on('value', function(snapshotPracas){ //|Referencía e liga(atribui) o data 
 //fim======================================================================================
 
 //botao de geracao da rota apartir do local do usuario até o destino
+			let contador = 0
 			document.querySelector("#btnRota").onclick = function(){
+				contador++
+				directionsDisplay.setMap(null);
+
 				const rendererOptions = {
 					map: map,
 					suppressMarkers: true
@@ -244,20 +290,21 @@ ref.on('value', function(snapshotPracas){ //|Referencía e liga(atribui) o data 
 				};
 
 				directionsService.route(confgRote, function(result,status){ //tratamento das rotas
+
+
 					if(status == 'OK'){ //consicao de erro da rota
-
-						var route = result.routes[0].legs[0];
-            			createMarkerOrigin(route.start_location);
-           				createMarkerEnd(route.end_location);
-
+						 var route = result.routes[0].legs[0];
+      			createMarkerOrigin(route.start_location);
+     				createMarkerEnd(route.end_location);
 						directionsDisplay.setDirections(result); //criacao da rota
 
 						document.querySelector("#onoff").style.display = "none"; //condicao para quando a rota for feita, o card que estiver aberto, fechará automaticamente
 					}
+
 				});
 			}
 			function createMarkerOrigin(position) {
-				var marker = new google.maps.Marker({
+				var markerOrg = new google.maps.Marker({
 					position: position,
 					map: map,
 					icon: 'imgs/loc-pequena.png'
@@ -265,7 +312,7 @@ ref.on('value', function(snapshotPracas){ //|Referencía e liga(atribui) o data 
 			}
 
 			function createMarkerEnd(position) {
-				var marker = new google.maps.Marker({
+				var markerEnd = new google.maps.Marker({
 					position: position,
 					map: map,
 					icon: 'imgs/marker-pequeno_larang.png'
@@ -305,9 +352,9 @@ google.maps.event.addDomListener(window, "load",function(){ // evento de busca d
 //marcador para o AUTOCOMPLETE, a pesquisa de locais
 	let searchMarker;
 	const brasilCenter = {lat: -14.235004,lng: -51.92528};
- 	searchMarker = new google.maps.Marker({
-		position:brasilCenter,
-		map: map
+	 	searchMarker = new google.maps.Marker({
+			position:brasilCenter,
+			map: map
 	});
 	searchMarker.setVisible(false);
 
@@ -316,10 +363,10 @@ google.maps.event.addDomListener(window, "load",function(){ // evento de busca d
 //criacao de um marker que será ultilizado na Geolocalizacao do usuario
 	let userLocarionMarker; //variavel onde vai ser guardada a informacao do geolocalizacao do usuario
 	const brasilCenter1 = {lat: -14.235004,lng: -51.92528};//vetor com o centro de Dourados-MS
- 	userLocarionMarker = new google.maps.Marker({ //criacao de um novo marcador
-		position:brasilCenter1,
-		map: map,
-		icon: 'imgs/loc-pequena.png'
+	 	userLocarionMarker = new google.maps.Marker({ //criacao de um novo marcador
+			position:brasilCenter1,
+			map: map,
+			icon: 'imgs/loc-pequena.png'
 	});
  	userLocarionMarker.setVisible(false);//esconder o marker para que quando for encontrado a localizacao do usuario, o valor será TRUE
 //fim====================================================================================
@@ -360,8 +407,8 @@ Recarregue a página`);
 
 //================================AUTOCOMPLETE======================================================
 	let inputTxt = document.querySelector("#autocomplete"); //busca o input text no arquivo HTML
-	const search = new google.maps.places.Autocomplete(inputTxt); //constante onde liga as informacoes da api de busca do maps com o input do HTML
-	search.bindTo("bounds",map); //execucao
+		const search = new google.maps.places.Autocomplete(inputTxt); //constante onde liga as informacoes da api de busca do maps com o input do HTML
+		search.bindTo("bounds",map); //execucao
 
 	search.addListener('place_changed', function(){
 

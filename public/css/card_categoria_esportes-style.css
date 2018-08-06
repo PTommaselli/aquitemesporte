@@ -42,6 +42,9 @@
   padding: 5px 5px 5px 5px;
   background-color: white;
 }
+.icone-categoria{
+  height: 100px;
+}
 
 #list-esportes{
   width: 94%;
