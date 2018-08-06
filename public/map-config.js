@@ -270,10 +270,26 @@ document.querySelector("#list-esportes").onclick = e =>{
 //fim======================================================================================
 
 //botao de geracao da rota apartir do local do usuario até o destino
+			let createMarkerOrigin = (position) => {
+				var markerOrg = new google.maps.Marker({
+					position: position,
+					map: map,
+					icon: 'imgs/loc-pequena.png'
+				});
+			}
+
+			let createMarkerEnd = (position) => {
+				var markerEnd = new google.maps.Marker({
+					position: position,
+					map: map,
+					icon: 'imgs/marker-pequeno_larang.png'
+				});
+			}
 			let contador = 0
 			document.querySelector("#btnRota").onclick = function(){
 				contador++
 				directionsDisplay.setMap(null);
+
 
 				const rendererOptions = {
 					map: map,
@@ -303,21 +319,9 @@ document.querySelector("#list-esportes").onclick = e =>{
 
 				});
 			}
-			function createMarkerOrigin(position) {
-				var markerOrg = new google.maps.Marker({
-					position: position,
-					map: map,
-					icon: 'imgs/loc-pequena.png'
-				});
-			}
 
-			function createMarkerEnd(position) {
-				var markerEnd = new google.maps.Marker({
-					position: position,
-					map: map,
-					icon: 'imgs/marker-pequeno_larang.png'
-				});
-			}
+
+
 
 //fim=====================================================================================
 
