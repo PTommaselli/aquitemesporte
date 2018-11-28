@@ -1,6 +1,5 @@
 
 //Conecção com o firebase
-
 const config = {
 	apiKey: "AIzaSyDuKKc8ksB76mmvzVvoY8P4vsi7Wrn5Wko",
 	authDomain: "ultimo-f7d1e.firebaseapp.com",
@@ -11,25 +10,15 @@ const config = {
 };
 firebase.initializeApp(config);
 
-//=============================================
 
-//Pegando informações do Database do firebase
 
 const db = firebase.database(); //buscando informações do database.
 const ref = db.ref('pracas'); //pegando a referencia do database.
-//=============================================
 
-//Pegando informações da Api do Maps.
-let directionsDisplay;
-let directionsService = new google.maps.DirectionsService();
-let map; //Variavel de geração do mapa.
-let marker; //Variavel de gereção dos marcadores.
-
-
-
-//=============================================
-
-//===========================MENU=======================================================
+var directionsDisplay;
+var directionsService = new google.maps.DirectionsService();
+var map; //Variavel de geração do mapa.
+var marker; //Variavel de gereção dos marcadores.
 
 //funcao que fecha o menu de opçoes da tela inicial
 let splitMenu = document.querySelector("#initMenu").onclick= function(){
@@ -42,11 +31,6 @@ let splitMenu = document.querySelector("#initMenu").onclick= function(){
 	}
 };
 
-//fim====================================================================================
-
-
-//fim====================================================================================
-
 //funcao que que abre o menu de modalidades esportes
 let btnSports = document.querySelector("#sports").onclick = function(){
 	let listSport = document.getElementById("card-categoria-esportes").style.display;
@@ -55,7 +39,6 @@ let btnSports = document.querySelector("#sports").onclick = function(){
 		document.getElementById("card-categoria-esportes").style.display = "block";
 	}else{
 		document.getElementById("card-categoria-esportes").style.display = "none";
-
 	}
 }
 
@@ -65,104 +48,94 @@ let btnSportsClose = document.querySelector("#btn-exit-card-esportes").onclick =
 
 	if (listSport == "block") {
 		document.getElementById("card-categoria-esportes").style.display = "none";
-		 document.querySelector('#locations').disabled = false;
+		//  document.querySelector('#locations').disabled = false;
 	}else{
 		document.getElementById("card-categoria-esportes").style.display = "block";
-		 document.querySelector('#locations').disabled = true;
+		//  document.querySelector('#locations').disabled = true;
 	}
 }
 
+var markersFilter = [];
+function markerfilter(locations){
+	var markerFilter = new google.maps.Marker({
+		position: locations,
+		map: map,
+		icon: 'imgs/marker-pequeno_larang.png'
+	});
+	markersFilter.push(markerFilter);
+}
+
+function setMapOnAll(map) {
+	for (var i = 0; i < markersFilter.length; i++) {
+		markersFilter[i].setMap(map);
+	}
+}
+
+function clearMarkers() {
+	setMapOnAll(null);
+}
 
 
-//=======================================================================================
+//filtragem das modalidades
+function filtroModalidade(snapshotPracas, modalidade){
+	let pracaspesquisa = snapshotPracas.val().value; // o "val()" transforma os dados do database em valores.
+	let filtroPracas = [];
+	clearMarkers()
+	pracaspesquisa.forEach(praca => {	
+		let esportes = Object.keys(praca.esportes).map(key => praca.esportes[key]);
+		
+		let result = esportes.filter(function(el){
+			return el.esporteNome === modalidade;
+		});
+		
+		if (result.length > 0){
+			filtroPracas.push(praca);	
+			let latM = praca.cord.latlng[0]
+			let lngM = praca.cord.latlng[1]
+			let cordenadas = {lat: latM, lng: lngM};
+			markerfilter(cordenadas);
+			console.log(cordenadas);
 
+			
+
+			// console.log(marker);
+		}
+				
+	})
+	
+	// console.log(filtroPracas)
+	
+	return filtroPracas;
+	
+}
+
+var markers = [];
+function markerMap(locPracas){
+		marker = new google.maps.Marker({ //criaçao dos marcadores de todas as pracas
+				position: locPracas, //pegas as cordenadas
+				map: map, //indica em qual lugar imprimi os marcadores
+				icon: 'imgs/marker-grande.png',//aplicacao do icone personalizado do marcador
+				title: name //quando passa o mouse em cima do marcador ele mostra o nome do local sem precisar clicar
+			});
+		markers.push(marker);
+		// console.log(markers)
+}
+
+console.log(markersFilter)
 
 ref.on('value', function(snapshotPracas){ //|Referencía e liga(atribui) o data base a uma função,
 										  //|onde tem-se um que imprime os valores do database.
-
-  let pracas = snapshotPracas.val(); // o "val()" transforma os dados do database em valores.
+  let pracas = snapshotPracas.val();
 
   for (let i = 0; i < pracas.value.length; i++) { //Loop que liga todos os dados do firebase
 	    let cordLat = pracas.value[i].cord.latlng[0]; //busca todas as cordenadas de latitude de todas as pracas
 	    let cordLng = pracas.value[i].cord.latlng[1]; //busca todas as cordenadas de longitude de todas as pracas
-			let codPracas = {lat: cordLat, lng: cordLng};//array com as cords de cada praca do database
+			let cordPracas = {lat: cordLat, lng: cordLng};//array com as cords de cada praca do database
 			let cordPracasDirection = new google.maps.LatLng(cordLat,cordLng);//metodo para coleta das cordenadas das pracas para a funcaode rotas
 			let name = pracas.value[i].propriedades.nome; //busca o nome de todas as pracas
 			let sports = pracas.value[i].esportes;  //busca os esportes de todas as pracas
 			let img = pracas.value[i].propriedades.img; //busca as imagens de todas a pracas
-			let propriedades_praca = pracas.value[i].propriedades;
-
-
-
 //=========================================================================================
-
-	const card_pracas = document.querySelector('#locations').onclick = () =>{
-
-		let listPraca = document.getElementById("card-categoria-pracas").style.display;
-
-		let list_praca = document.querySelector('#container-list-pracas');
-		let ul_list_praca = document.createElement('ul');
-		let a_list_praca;
-		let li_list_praca;
-		let img_list_praca;
-		let name_list_praca;
-
-
-		list_praca.appendChild(ul_list_praca);
-
-		  for (let i = 0; i < pracas.value.length; i++){
-
-
-
-				a_list_praca = document.createElement('a');
-				a_list_praca.setAttribute('class', 'link_item_praca');
-
-				li_list_praca = document.createElement('li');
-				li_list_praca.setAttribute('class', 'list_pracas');
-
-				img_list_praca = document.createElement('img');
-				img_list_praca.setAttribute('class', 'img_praca');
-
-				name_list_praca = document.createElement('p');
-				name_list_praca.setAttribute('class', 'nome_praca');
-
-				name_list_praca.innerHTML = pracas.value[i].propriedades.nome;
-				img_list_praca.src = pracas.value[i].propriedades.img;
-
-				li_list_praca.appendChild(img_list_praca);
-				li_list_praca.appendChild(name_list_praca);
-				a_list_praca.appendChild(li_list_praca);
-				ul_list_praca.appendChild(a_list_praca);
-
-
-				//funcao que que fecha o menu de lista de  praças
-				let btnListPracasClose = document.querySelector("#btn-exit-card-pracas").onclick = function(){
-					let listPracas = document.getElementById("card-categoria-pracas").style.display;
-
-					if (listPracas == "block") {
-						document.getElementById("card-categoria-pracas").style.display = "none";
-						 document.querySelector('#locations').disabled = false;
-						 list_praca.innerText = ''
-					}else{
-						document.getElementById("card-categoria-pracas").style.display = "block";
-						 document.querySelector('#locations').disabled = true;
-					}
-				}
-
-				if (listPraca == "none") {
-					document.getElementById("card-categoria-pracas").style.display = "block";
-					document.querySelector('#locations').disabled = true;
-				}else{
-					document.getElementById("card-categoria-pracas").style.display = "none";
-					 document.querySelector('#locations').disabled = false;
-					 list_praca.innerText = ''
-				}
-			}
-
-	}
-
-
-
 
 
 //funcao onde fecha o card do local que o usuario escolheu
@@ -181,55 +154,19 @@ ref.on('value', function(snapshotPracas){ //|Referencía e liga(atribui) o data 
 //markers, rotas, displays cards
 
 //=========================================================================================
+		document.querySelector("#list-esportes").onclick = (e) =>{
+			let resultClick = e.target.id;
+			// console.log(filtroModalidade(snapshotPracas, resultClick));
+			filtroModalidade(snapshotPracas, resultClick);
+		}
+
+
 //criacao dos marcadores no mapa
-	  marker = new google.maps.Marker({ //criaçao dos marcadores de todas as pracas
-			position: codPracas, //pegas as cordenadas
-	 		map: map, //indica em qual lugar imprimi os marcadores
-	 		icon: 'imgs/marker-grande.png',//aplicacao do icone personalizado do marcador
-			title: name //quando passa o mouse em cima do marcador ele mostra o nome do local sem precisar clicar
-		});
-		marker.setVisible(true);//tornar o marker visivel
+		
+markerMap(cordPracas)
+
 //fim======================================================================================
-
-document.querySelector("#list-esportes").onclick = e =>{
-	switch (e.target.id) {
-		case "academia":
-		//Douradao, CEPPER I, CEPPER II, Parque dos Ipes
-		case "basquete":
-		//Parque Alvorada, Parque Antenora Martins, Parque dos Ipes, CEPPER II
-		case "bicicleta":
-		//Parque dos Ipes, Imaculada
-		case "caminhada":
-		//Parque Alvorada, Douradao, CEPPER I, CEPPER II, Imaculada, Parque dos Ipes
-		case "corrida":
-		//Parque Alvorada, Douradao, CEPPER I, CEPPER II, Imaculada, Parque dos Ipes
-		case "futAmericano":
-		//Parque Alvorada,
-		case "futsal":
-		//Parque Alvorada, CEPPER I, CEPPER II, Ginasio, Parque dos Ipes
-		case "futebol":
-		//Parque Antenor Martins,
-		case "parquinho":
-		//Parque Alvorada, CEPPER I, Parque dos Ipes
-		case "patins":
-		//Parque Alvorada,
-		case "peteca":
-		//Parque dos Ipes
-		case "skate":
-		//Parque Alvorada, CEPPER II,
-		case "slike":
-		//Parque dos Ipes
-		case "volei":
-		//CEPPER I, CEPPER II, Ginasio, Parque dos Ipes
-		case "voleideareia":
-		//CEPPER I, Parque dos Ipes
-		case "handbol":
-		//Ginasio
-		case "corridaderua":
-		//Parque dos Ipes
-	}
-}
-
+		
 
 
 //funcao de click e adiçao dos dados do data base no card selecionado
@@ -270,34 +207,35 @@ document.querySelector("#list-esportes").onclick = e =>{
 //fim======================================================================================
 
 //botao de geracao da rota apartir do local do usuario até o destino
-			let createMarkerOrigin = (position) => {
-				var markerOrg = new google.maps.Marker({
-					position: position,
-					map: map,
-					icon: 'imgs/loc-pequena.png'
-				});
-			}
+			var positionOrg = {lat: -22.205372,lng: -54.750768};
+			var markerOrg = new google.maps.Marker({
+				position: positionOrg,
+				map: map,
+				icon: 'imgs/loc-pequena.png'
+			});
+			markerOrg.setVisible(false);
+			var positionEnd = {lat: -22.205372,lng: -54.750768};
+			var markerEnd = new google.maps.Marker({
+				position: positionEnd,
+				map: map,
+				icon: 'imgs/marker-pequeno_larang.png'
+			});
+			markerEnd.setVisible(false);
 
-			let createMarkerEnd = (position) => {
-				var markerEnd = new google.maps.Marker({
-					position: position,
-					map: map,
-					icon: 'imgs/marker-pequeno_larang.png'
-				});
-			}
-			let contador = 0
 			document.querySelector("#btnRota").onclick = function(){
-				contador++
 				directionsDisplay.setMap(null);
-
+				console.log(markerEnd)
+				console.log(markerOrg)
 
 				const rendererOptions = {
 					map: map,
 					suppressMarkers: true
 				};
 
+
 				directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
 				directionsDisplay.setMap(map);
+
 
 				let confgRote = { //configuracoes da rota
 					origin: userPoint, //ponto A da rota, a origem
@@ -307,11 +245,22 @@ document.querySelector("#list-esportes").onclick = e =>{
 
 				directionsService.route(confgRote, function(result,status){ //tratamento das rotas
 
+					var route = result.routes[0].legs[0];
+					positionOrg = route.start_location;
+					positionEnd = route.end_location;
+
 
 					if(status == 'OK'){ //consicao de erro da rota
-						 var route = result.routes[0].legs[0];
-      			createMarkerOrigin(route.start_location);
-     				createMarkerEnd(route.end_location);
+
+						 
+						 markerOrg.setPosition(positionOrg);
+						 markerOrg.setVisible(true);
+
+						 markerEnd.setPosition(positionEnd)
+						 markerEnd.setVisible(true);
+
+
+
 						directionsDisplay.setDirections(result); //criacao da rota
 
 						document.querySelector("#onoff").style.display = "none"; //condicao para quando a rota for feita, o card que estiver aberto, fechará automaticamente
@@ -328,9 +277,13 @@ document.querySelector("#list-esportes").onclick = e =>{
 
 		});
 
+		
+		
+		
+
 	};
 
-
+	
 });
 
 
@@ -341,11 +294,9 @@ document.querySelector("#list-esportes").onclick = e =>{
 
 
 const DouradosCenter = {lat: -22.223617,lng: -54.812193}; //constante onde contém a latitude e longitude do centro de dourados
-
-//========================================================================================
 google.maps.event.addDomListener(window, "load",function(){ // evento de busca de locais no mapa e funcao de inicializacao de mapa
 	directionsDisplay = new google.maps.DirectionsRenderer();//atributo de direcao no mapa para a geracao das rotas
-	map = new google.maps.Map(document.getElementById('map'), { //inicializacao do mapa
+		map = new google.maps.Map(document.getElementById('map'), { //inicializacao do mapa
 		center: DouradosCenter, //centralizacao do mapa, nesse caso o centro da cidade de Dourados-MS
 		zoom: 14 //proximidade da visao do mapa
 	});
@@ -368,17 +319,18 @@ google.maps.event.addDomListener(window, "load",function(){ // evento de busca d
 	let userLocarionMarker; //variavel onde vai ser guardada a informacao do geolocalizacao do usuario
 	const brasilCenter1 = {lat: -14.235004,lng: -51.92528};//vetor com o centro de Dourados-MS
 	 	userLocarionMarker = new google.maps.Marker({ //criacao de um novo marcador
-			position:brasilCenter1,
+			position: brasilCenter1,
 			map: map,
 			icon: 'imgs/loc-pequena.png'
 	});
  	userLocarionMarker.setVisible(false);//esconder o marker para que quando for encontrado a localizacao do usuario, o valor será TRUE
 //fim====================================================================================
-
+	var contador_posicao_user = 0;
 //busca da Geolocalizacao e alertar na tela o exato ponto onde o usuario esteja posicionado
 	let btnGPS = document.querySelector("#userLoc").onclick = function(){ //inicio, buscando o botao onde sera implementado a funcao
 		if ('geolocation' in navigator) {
 			navigator.geolocation.getCurrentPosition(function(position){
+				contador_posicao_user++;
 				let userPositionLat = position.coords.latitude;
 				let userPositionLng = position.coords.longitude;
 				let userPoint = {lat: userPositionLat, lng: userPositionLng};
@@ -392,15 +344,6 @@ google.maps.event.addDomListener(window, "load",function(){ // evento de busca d
 				window.alert //alerta caso o localizador nao esteja ligado
 				(`Ligue o Localizador para ver sua localização!!!
 Recarregue a página`);
-				const time = 3000;
-
-				if('geolocation' in navigator) {
-					setTimeout("document.location.reload(true);", time); //recarregamento da pagina automaticamente
-				}else{
-					window.alert
-				(`Ligue o Localizador para ver sua localização!!!
-Recarregue a página`);
-				}
 			});
 		};
 	};

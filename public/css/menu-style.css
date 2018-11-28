@@ -57,13 +57,20 @@
 }
 
 #userLoc{
-	background: var(--cor-btn-app);
+	/* background: var(--cor-btn-app);
 	width: 40px;
 	height: 40px;
 	position: fixed;
 	z-index: 2;
 	bottom: 100px;
-	right: 100px;
+	right: 100px; */
+	background: var(--cor-btn-app);
+	width: 55px;
+	height: 55px;
+	position: fixed;
+	z-index: 2;
+	bottom: 35px;
+	right: 70px;
 }
 
 #favPraca{
