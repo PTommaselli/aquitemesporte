@@ -9,6 +9,7 @@
 	left: 10%;
 	right: 20%;
 	align-items: center;
+	border-radius: 50px;
 }
 
 #autocomplete{
@@ -18,17 +19,15 @@
 	margin-left: 2%;
 	height: 30px;
 	margin-top: 10px;
-	border-left: none;
-	border-right: none;
-	border-top: none;
+	border: none;
 	outline: none;
 	font-size: 16px;
-	margin-bottom: 5px;
+	margin-bottom: 7px;
 }
 
 #lupa{
 	position: absolute;
-	right: 10px;
+	right: 15px;
 	color: #E0E0E0;
 }
 

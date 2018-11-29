@@ -2,6 +2,8 @@
 	--cor-btn-app: #E0E0E0
 }
 
+
+
 #initMenu{
 	width: 75px;
 	height: 75px;
@@ -43,7 +45,6 @@
 	z-index: 2;
 	bottom: 35px;
 	left: 70px;
-	right: ;
 }
 
 #locations{
@@ -73,7 +74,8 @@
 	right: 70px;
 }
 
-#favPraca{
+/* #favPraca{
+	display: flex;
 	background: var(--cor-btn-app);
 	width: 40px;
 	height: 40px;
@@ -81,7 +83,7 @@
 	z-index: 2;
 	bottom: 100px;
 	left: 100px;
-}
+} */
 
 #grad {
   position: fixed;
@@ -96,4 +98,28 @@
                      
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#000000',GradientType=0 );
 }
+
+.btnCancel{
+	display: flex;
+	width: 80%;
+	position: fixed;
+	z-index: 2;
+	bottom: 130px;
+	left: 10%;
+	right: 20%;
+	align-items: center;
+	justify-content: center;
+}
+
+#cancelarRota{
+	width: 145px;
+	display: none;
+	margin-right: 2%;
+	margin-left: 2%;
+	margin-top: 10px;
+	margin-bottom: 5px;
+	text-align: center;
+}
+
+
 

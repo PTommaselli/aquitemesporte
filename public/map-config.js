@@ -10,8 +10,6 @@ const config = {
 };
 firebase.initializeApp(config);
 
-
-
 const db = firebase.database(); //buscando informações do database.
 const ref = db.ref('pracas'); //pegando a referencia do database.
 
@@ -19,7 +17,7 @@ var directionsDisplay;
 var directionsService = new google.maps.DirectionsService();
 var map; //Variavel de geração do mapa.
 var marker; //Variavel de gereção dos marcadores.
-
+var userLocarionMarker; //variavel onde vai ser guardada a informacao do geolocalizacao do usuario
 //funcao que fecha o menu de opçoes da tela inicial
 let splitMenu = document.querySelector("#initMenu").onclick= function(){
 	let menu = document.getElementById("splitMenu").style.display;
@@ -55,26 +53,7 @@ let btnSportsClose = document.querySelector("#btn-exit-card-esportes").onclick =
 	}
 }
 
-var markersFilter = [];
-function markerfilter(locations){
-	var markerFilter = new google.maps.Marker({
-		position: locations,
-		map: map,
-		icon: 'imgs/marker-pequeno_larang.png'
-	});
-	markersFilter.push(markerFilter);
-}
-
-function setMapOnAll(map) {
-	for (var i = 0; i < markersFilter.length; i++) {
-		markersFilter[i].setMap(map);
-	}
-}
-
-function clearMarkers() {
-	setMapOnAll(null);
-}
-
+let calcelRoute = document.querySelector("#cancelarRota").onclick = () => { setTimeout("document.location.reload(true);") }
 
 //filtragem das modalidades
 function filtroModalidade(snapshotPracas, modalidade){
@@ -93,20 +72,150 @@ function filtroModalidade(snapshotPracas, modalidade){
 			let latM = praca.cord.latlng[0]
 			let lngM = praca.cord.latlng[1]
 			let cordenadas = {lat: latM, lng: lngM};
-			markerfilter(cordenadas);
+			markerMap(cordenadas);
 			console.log(cordenadas);
+
+			let cordPracasDirection = new google.maps.LatLng(latM,lngM);//metodo para coleta das cordenadas das pracas para a funcaode rotas
+			let name = praca.propriedades.nome; //busca o nome de todas as pracas
+			let sports = praca.esportes;  //busca os esportes de todas as pracas
+			let img = praca.propriedades.img; //busca as imagens de todas a pracas
 
 			
 
-			// console.log(marker);
+			marker.addListener("click", function(){ //funcao onde é adicionado o evento de click e a funcao onde gera um "card" com as informacoes da praca selecionada
+				document.getElementById("onoff").style.display = "block"; //quando click for acionado o card fica com display block, ou seja, imprime na tela
+				document.getElementById("title-card").innerHTML = name; //imprime o nome do local, no card
+//fim======================================================================================
+
+//aplicacao dos icones das modalidades esportivas nos card referente as pracas
+				sports.filter(function(esporte) {//filtragem das imagens de cada modalidades esportiva para o card
+					const linkSport = esporte.link;//caminho no banco de dados
+					let ImgDesc = document.getElementById("desc-card");//buscando a posicao do card onde sera colocado as imagens de cada modadalidade
+					let ImgCreated = document.createElement("img");//criacao do elemento IMG para que, com o FOR, crie todas imagens das modalidades esportidas de cada praca
+					ImgCreated.setAttribute('class','icon_sports_card');
+					ImgCreated.src = "" +linkSport+ "";//implementando o link da imagem no SRC do elemento IMG no card
+					ImgDesc.appendChild(ImgCreated);//aplicando o elemento IMG no card
+
+				})
+//fim======================================================================================
+
+				document.querySelector(".demo-card-wide > .mdl-card__title").style.background = "url('"+img+"') center / cover"; // imprime a imagem do local, no card
+
+//=========================================================================================
+
+
+
+
+//busca da localizacao do usuario para a rota
+				let userPoint;//variavel para a aplicacao da geolocalizacao do usuario
+					if ('geolocation' in navigator) {
+						navigator.geolocation.getCurrentPosition(function(position){ //buscando confirmacao do usuario no navegador
+							let userPositionLat = position.coords.latitude;//organizacao das coordenadas de latitude
+							let userPositionLng = position.coords.longitude;//organizacao das coordenadas da longitude
+							userPoint = new google.maps.LatLng(userPositionLat,userPositionLng);//aplicando na variavel userPoint
+
+						});
+					};
+//fim======================================================================================
+
+//botao de geracao da rota apartir do local do usuario até o destino
+			var positionOrg = {lat: -22.205372,lng: -54.750768};
+			var markerOrg = new google.maps.Marker({
+				position: positionOrg,
+				map: map,
+				icon: 'imgs/loc-pequena.png'
+			});
+			markerOrg.setVisible(false);
+			var positionEnd = {lat: -22.205372,lng: -54.750768};
+			var markerEnd = new google.maps.Marker({
+				position: positionEnd,
+				map: map,
+				icon: 'imgs/marker-pequeno_larang.png'
+			});
+			markerEnd.setVisible(false);
+
+			document.querySelector("#btnRota").onclick = function(){
+				directionsDisplay.setMap(null);
+				console.log(markerEnd)
+				console.log(markerOrg)
+
+				const rendererOptions = {
+					map: map,
+					suppressMarkers: true
+				};
+
+
+				directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
+				directionsDisplay.setMap(map);
+
+
+				let confgRote = { //configuracoes da rota
+					origin: userPoint, //ponto A da rota, a origem
+					destination: cordPracasDirection, //ponto B da rota, o fim
+					travelMode: 'DRIVING' //transporte utilizado
+				};
+
+				directionsService.route(confgRote, function(result,status){ //tratamento das rotas
+
+					var route = result.routes[0].legs[0];
+					positionOrg = route.start_location;
+					positionEnd = route.end_location;
+
+
+					if(status == 'OK'){ //consicao de erro da rota
+
+						 
+						 markerOrg.setPosition(positionOrg);
+						 markerOrg.setVisible(true);
+
+						 markerEnd.setPosition(positionEnd)
+						 markerEnd.setVisible(true);
+
+
+
+						directionsDisplay.setDirections(result); //criacao da rota
+
+						document.querySelector("#card-desc-loc").style.display = "none"; //condicao para quando a rota for feita, o card que estiver aberto, fechará automaticamente
+
+						document.querySelector("#cancelarRota").style.display = "block";
+					}
+
+				});
+			}
+//fim====================================================================================
+
+		});
+
+			
 		}
 				
 	})
 	
-	// console.log(filtroPracas)
+
 	
 	return filtroPracas;
 	
+}
+
+
+//criacao de um marker que será ultilizado na Geolocalizacao do usuario
+var ArrayPositionUser = [];
+function userLocationMarker(positionUser){
+	 userLocarionMarker = new google.maps.Marker({ //criacao de um novo marcador
+		position: positionUser,
+		map: map,
+		icon: 'imgs/loc-pequena.png'
+	 });
+	ArrayPositionUser.push(userLocarionMarker)
+}
+function agruparMarkers(map) {
+	for (var i = 0; i < markers.length; i++) {
+		markers[i].setMap(map);
+	}
+}
+
+function clearMarkers() {
+	agruparMarkers(null);
 }
 
 var markers = [];
@@ -121,8 +230,6 @@ function markerMap(locPracas){
 		// console.log(markers)
 }
 
-console.log(markersFilter)
-
 ref.on('value', function(snapshotPracas){ //|Referencía e liga(atribui) o data base a uma função,
 										  //|onde tem-se um que imprime os valores do database.
   let pracas = snapshotPracas.val();
@@ -135,8 +242,6 @@ ref.on('value', function(snapshotPracas){ //|Referencía e liga(atribui) o data 
 			let name = pracas.value[i].propriedades.nome; //busca o nome de todas as pracas
 			let sports = pracas.value[i].esportes;  //busca os esportes de todas as pracas
 			let img = pracas.value[i].propriedades.img; //busca as imagens de todas a pracas
-//=========================================================================================
-
 
 //funcao onde fecha o card do local que o usuario escolheu
 		let exit = document.querySelector("#exit").onclick = function(){
@@ -149,25 +254,15 @@ ref.on('value', function(snapshotPracas){ //|Referencía e liga(atribui) o data 
 				document.getElementById("onoff").style.display = "block";
 			}
 		};
-//fim======================================================================================
 
-//markers, rotas, displays cards
-
-//=========================================================================================
+//aciona o filtro de praças
 		document.querySelector("#list-esportes").onclick = (e) =>{
 			let resultClick = e.target.id;
-			// console.log(filtroModalidade(snapshotPracas, resultClick));
 			filtroModalidade(snapshotPracas, resultClick);
 		}
 
-
 //criacao dos marcadores no mapa
-		
-markerMap(cordPracas)
-
-//fim======================================================================================
-		
-
+		markerMap(cordPracas)
 
 //funcao de click e adiçao dos dados do data base no card selecionado
 		marker.addListener("click", function(){ //funcao onde é adicionado o evento de click e a funcao onde gera um "card" com as informacoes da praca selecionada
@@ -263,34 +358,14 @@ markerMap(cordPracas)
 
 						directionsDisplay.setDirections(result); //criacao da rota
 
-						document.querySelector("#onoff").style.display = "none"; //condicao para quando a rota for feita, o card que estiver aberto, fechará automaticamente
+						document.querySelector("#onoff").style.display = "none"; 
+						document.querySelector("#cancelarRota").style.display = "block";
 					}
-
 				});
 			}
-
-
-
-
-//fim=====================================================================================
-
-
 		});
-
-		
-		
-		
-
 	};
-
-	
 });
-
-
-
-
-
-
 
 
 const DouradosCenter = {lat: -22.223617,lng: -54.812193}; //constante onde contém a latitude e longitude do centro de dourados
@@ -313,32 +388,17 @@ google.maps.event.addDomListener(window, "load",function(){ // evento de busca d
 	});
 	searchMarker.setVisible(false);
 
-//fim=====================================================================================
-
-//criacao de um marker que será ultilizado na Geolocalizacao do usuario
-	let userLocarionMarker; //variavel onde vai ser guardada a informacao do geolocalizacao do usuario
-	const brasilCenter1 = {lat: -14.235004,lng: -51.92528};//vetor com o centro de Dourados-MS
-	 	userLocarionMarker = new google.maps.Marker({ //criacao de um novo marcador
-			position: brasilCenter1,
-			map: map,
-			icon: 'imgs/loc-pequena.png'
-	});
- 	userLocarionMarker.setVisible(false);//esconder o marker para que quando for encontrado a localizacao do usuario, o valor será TRUE
-//fim====================================================================================
-	var contador_posicao_user = 0;
 //busca da Geolocalizacao e alertar na tela o exato ponto onde o usuario esteja posicionado
 	let btnGPS = document.querySelector("#userLoc").onclick = function(){ //inicio, buscando o botao onde sera implementado a funcao
+		ArrayPositionUser = [];
 		if ('geolocation' in navigator) {
 			navigator.geolocation.getCurrentPosition(function(position){
-				contador_posicao_user++;
 				let userPositionLat = position.coords.latitude;
 				let userPositionLng = position.coords.longitude;
 				let userPoint = {lat: userPositionLat, lng: userPositionLng};
-				userLocarionMarker.setPosition(userPoint);
 				map.setCenter(userPoint); //recentralizando o centro do mapa para a localizacao do usuario
 				map.setZoom(16); //aumento do zoon para uma melhor vizualizacao
-				userLocarionMarker.setVisible(true);//marker passa a ser visivel
-
+				userLocationMarker(userPoint);
 			}, function(error){//caso der algum erro
 
 				window.alert //alerta caso o localizador nao esteja ligado
