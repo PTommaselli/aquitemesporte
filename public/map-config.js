@@ -18,6 +18,9 @@ var directionsService = new google.maps.DirectionsService();
 var map; //Variavel de geração do mapa.
 var marker; //Variavel de gereção dos marcadores.
 var userLocarionMarker; //variavel onde vai ser guardada a informacao do geolocalizacao do usuario
+var markerOrg;
+var markerEnd;
+
 //funcao que fecha o menu de opçoes da tela inicial
 let splitMenu = document.querySelector("#initMenu").onclick= function(){
 	let menu = document.getElementById("splitMenu").style.display;
@@ -53,7 +56,8 @@ let btnSportsClose = document.querySelector("#btn-exit-card-esportes").onclick =
 	}
 }
 
-let calcelRoute = document.querySelector("#cancelarRota").onclick = () => { setTimeout("document.location.reload(true);") }
+let calcelRoute = document.querySelector("#cancelarRota").onclick = () => { setTimeout("document.location.reload(true);") };
+let calcelSearch = document.querySelector("#cancelarBusca").onclick = () => { setTimeout("document.location.reload(true);") }
 
 //filtragem das modalidades
 function filtroModalidade(snapshotPracas, modalidade){
@@ -73,7 +77,6 @@ function filtroModalidade(snapshotPracas, modalidade){
 			let lngM = praca.cord.latlng[1]
 			let cordenadas = {lat: latM, lng: lngM};
 			markerMap(cordenadas);
-			console.log(cordenadas);
 
 			let cordPracasDirection = new google.maps.LatLng(latM,lngM);//metodo para coleta das cordenadas das pracas para a funcaode rotas
 			let name = praca.propriedades.nome; //busca o nome de todas as pracas
@@ -104,8 +107,6 @@ function filtroModalidade(snapshotPracas, modalidade){
 //=========================================================================================
 
 
-
-
 //busca da localizacao do usuario para a rota
 				let userPoint;//variavel para a aplicacao da geolocalizacao do usuario
 					if ('geolocation' in navigator) {
@@ -118,27 +119,8 @@ function filtroModalidade(snapshotPracas, modalidade){
 					};
 //fim======================================================================================
 
-//botao de geracao da rota apartir do local do usuario até o destino
-			var positionOrg = {lat: -22.205372,lng: -54.750768};
-			var markerOrg = new google.maps.Marker({
-				position: positionOrg,
-				map: map,
-				icon: 'imgs/loc-pequena.png'
-			});
-			markerOrg.setVisible(false);
-			var positionEnd = {lat: -22.205372,lng: -54.750768};
-			var markerEnd = new google.maps.Marker({
-				position: positionEnd,
-				map: map,
-				icon: 'imgs/marker-pequeno_larang.png'
-			});
-			markerEnd.setVisible(false);
-
 			document.querySelector("#btnRota").onclick = function(){
-				directionsDisplay.setMap(null);
-				console.log(markerEnd)
-				console.log(markerOrg)
-
+				clearMarkersDirections();
 				const rendererOptions = {
 					map: map,
 					suppressMarkers: true
@@ -158,25 +140,20 @@ function filtroModalidade(snapshotPracas, modalidade){
 				directionsService.route(confgRote, function(result,status){ //tratamento das rotas
 
 					var route = result.routes[0].legs[0];
-					positionOrg = route.start_location;
-					positionEnd = route.end_location;
+					let cordOrg = route.start_location;
+					let cordEnd = route.end_location;
 
 
 					if(status == 'OK'){ //consicao de erro da rota
 
-						 
-						 markerOrg.setPosition(positionOrg);
-						 markerOrg.setVisible(true);
-
-						 markerEnd.setPosition(positionEnd)
-						 markerEnd.setVisible(true);
-
-
-
+						markerDirectionOrigin(cordOrg);
+						markerDirectionEnd(cordEnd);
+						clearMarkers();
+						clearMarkersSearch();
 						directionsDisplay.setDirections(result); //criacao da rota
 
 						document.querySelector("#card-desc-loc").style.display = "none"; //condicao para quando a rota for feita, o card que estiver aberto, fechará automaticamente
-
+						document.querySelector("#cancelarBusca").style.display = "none";
 						document.querySelector("#cancelarRota").style.display = "block";
 					}
 
@@ -197,6 +174,37 @@ function filtroModalidade(snapshotPracas, modalidade){
 	
 }
 
+//craia os marcadores de origem e fim da rota
+var markersDirections = [];
+function markerDirectionOrigin(positionOrg){
+	markerOrg = new google.maps.Marker({
+		position: positionOrg,
+		map: map,
+		icon: 'imgs/loc-pequena.png'
+	});
+	markersDirections.push(markerOrg);
+}
+function markerDirectionEnd(positionEnd){
+	markerEnd = new google.maps.Marker({
+		position: positionEnd,
+		map: map,
+		icon: 'imgs/marker-pequeno_larang.png'
+	});
+	markersDirections.push(markerEnd);
+}
+
+//agrupa os marcadores de direçao
+function agruparMarkersDirectins(map) {
+	for (var i = 0; i < markersDirections.length; i++) {
+		markersDirections[i].setMap(map);
+	}
+}
+
+//apaga os marcadores e a linha de direção
+function clearMarkersDirections() {
+	agruparMarkersDirectins(null);
+	directionsDisplay.setMap(null);
+}
 
 //criacao de um marker que será ultilizado na Geolocalizacao do usuario
 var ArrayPositionUser = [];
@@ -208,16 +216,20 @@ function userLocationMarker(positionUser){
 	 });
 	ArrayPositionUser.push(userLocarionMarker)
 }
-function agruparMarkers(map) {
-	for (var i = 0; i < markers.length; i++) {
-		markers[i].setMap(map);
+
+//agrupamento do marcador da localizacao do usuario
+function agruparMarkersLocUser(map) {
+	for (var i = 0; i < ArrayPositionUser.length; i++) {
+		ArrayPositionUser[i].setMap(map);
 	}
 }
 
-function clearMarkers() {
-	agruparMarkers(null);
+//apagar marcadores da localizaçao do usuario
+function clearMarkersUserLoc() {
+	agruparMarkersLocUser(null);
 }
 
+//criaçao dos marcadores do mapa onde localiza-se as praças
 var markers = [];
 function markerMap(locPracas){
 		marker = new google.maps.Marker({ //criaçao dos marcadores de todas as pracas
@@ -227,8 +239,21 @@ function markerMap(locPracas){
 				title: name //quando passa o mouse em cima do marcador ele mostra o nome do local sem precisar clicar
 			});
 		markers.push(marker);
-		// console.log(markers)
+
 }
+
+//agrupamento dos marcadores do mapa onde localiza-se as praças
+function agruparMarkers(map) {
+	for (var i = 0; i < markers.length; i++) {
+		markers[i].setMap(map);
+	}
+}
+
+//apagar markers
+function clearMarkers() {
+	agruparMarkers(null);
+}
+
 
 ref.on('value', function(snapshotPracas){ //|Referencía e liga(atribui) o data base a uma função,
 										  //|onde tem-se um que imprime os valores do database.
@@ -302,25 +327,10 @@ ref.on('value', function(snapshotPracas){ //|Referencía e liga(atribui) o data 
 //fim======================================================================================
 
 //botao de geracao da rota apartir do local do usuario até o destino
-			var positionOrg = {lat: -22.205372,lng: -54.750768};
-			var markerOrg = new google.maps.Marker({
-				position: positionOrg,
-				map: map,
-				icon: 'imgs/loc-pequena.png'
-			});
-			markerOrg.setVisible(false);
-			var positionEnd = {lat: -22.205372,lng: -54.750768};
-			var markerEnd = new google.maps.Marker({
-				position: positionEnd,
-				map: map,
-				icon: 'imgs/marker-pequeno_larang.png'
-			});
-			markerEnd.setVisible(false);
-
+			
 			document.querySelector("#btnRota").onclick = function(){
-				directionsDisplay.setMap(null);
-				console.log(markerEnd)
-				console.log(markerOrg)
+				clearMarkersDirections();
+				
 
 				const rendererOptions = {
 					map: map,
@@ -341,24 +351,20 @@ ref.on('value', function(snapshotPracas){ //|Referencía e liga(atribui) o data 
 				directionsService.route(confgRote, function(result,status){ //tratamento das rotas
 
 					var route = result.routes[0].legs[0];
-					positionOrg = route.start_location;
-					positionEnd = route.end_location;
+					let cordOrg = route.start_location;
+					let cordEnd = route.end_location;
 
 
 					if(status == 'OK'){ //consicao de erro da rota
 
-						 
-						 markerOrg.setPosition(positionOrg);
-						 markerOrg.setVisible(true);
-
-						 markerEnd.setPosition(positionEnd)
-						 markerEnd.setVisible(true);
-
-
-
+						markerDirectionOrigin(cordOrg);
+						markerDirectionEnd(cordEnd);
+						clearMarkers();
+						clearMarkersSearch();
 						directionsDisplay.setDirections(result); //criacao da rota
 
 						document.querySelector("#onoff").style.display = "none"; 
+						document.querySelector("#cancelarBusca").style.display = "none";
 						document.querySelector("#cancelarRota").style.display = "block";
 					}
 				});
@@ -366,6 +372,30 @@ ref.on('value', function(snapshotPracas){ //|Referencía e liga(atribui) o data 
 		});
 	};
 });
+
+var searchMarker;
+var searchMarkers = [];
+//criação dos marcadores da pesquisa
+function searchLocMarker(searchLoc){
+	 searchMarker = new google.maps.Marker({
+		position: searchLoc,
+		map: map,
+		icon:'imgs/marker-pequeno.png'
+	 });
+	 searchMarkers.push(searchMarker);
+}
+
+//agrupamento dos marcadores da pesquisa
+function agruparMarkersSearch(map) {
+	for (var i = 0; i < searchMarkers.length; i++) {
+		searchMarkers[i].setMap(map);
+	}
+}
+
+//apagar marcadores da pesquisa
+function clearMarkersSearch() {
+	agruparMarkersSearch(null);
+}
 
 
 const DouradosCenter = {lat: -22.223617,lng: -54.812193}; //constante onde contém a latitude e longitude do centro de dourados
@@ -377,20 +407,11 @@ google.maps.event.addDomListener(window, "load",function(){ // evento de busca d
 	});
 	directionsDisplay.setMap(map); //licacao do direction com o mapa
 
-//fim====================================================================================
-
 //marcador para o AUTOCOMPLETE, a pesquisa de locais
-	let searchMarker;
-	const brasilCenter = {lat: -14.235004,lng: -51.92528};
-	 	searchMarker = new google.maps.Marker({
-			position:brasilCenter,
-			map: map
-	});
-	searchMarker.setVisible(false);
 
 //busca da Geolocalizacao e alertar na tela o exato ponto onde o usuario esteja posicionado
 	let btnGPS = document.querySelector("#userLoc").onclick = function(){ //inicio, buscando o botao onde sera implementado a funcao
-		ArrayPositionUser = [];
+		clearMarkersUserLoc();
 		if ('geolocation' in navigator) {
 			navigator.geolocation.getCurrentPosition(function(position){
 				let userPositionLat = position.coords.latitude;
@@ -413,9 +434,17 @@ Recarregue a página`);
 
 
 //================================AUTOCOMPLETE======================================================
+	var defaultBounds = new google.maps.LatLngBounds(
+		new google.maps.LatLng(-22.223617, -54.812193));
+
+	var options = {
+		bounds: defaultBounds,
+		types: ['establishment']
+	};
+	
 	let inputTxt = document.querySelector("#autocomplete"); //busca o input text no arquivo HTML
-		const search = new google.maps.places.Autocomplete(inputTxt); //constante onde liga as informacoes da api de busca do maps com o input do HTML
-		search.bindTo("bounds",map); //execucao
+	const search = new google.maps.places.Autocomplete(inputTxt, options); //constante onde liga as informacoes da api de busca do maps com o input do HTML
+	search.bindTo("bounds",map); //execucao
 
 	search.addListener('place_changed', function(){
 
@@ -433,7 +462,27 @@ Recarregue a página`);
 			map.setZoom(18);
 		}
 
-		searchMarker.setPosition(place.geometry.location);
-		//searchMarker.setVisible(true);
+		searchLocMarker(place.geometry.location);
+		document.querySelector("#cancelarBusca").style.display = "block";
+
 	});
 })
+
+
+window.addEventListener('beforeinstallprompt', function(e) {
+	// beforeinstallprompt Event fired
+  
+	// e.userChoice will return a Promise.
+	// For more details read: https://developers.google.com/web/fundamentals/getting-started/primers/promises
+	e.userChoice.then(function(choiceResult) {
+  
+	  console.log(choiceResult.outcome);
+  
+	  if(choiceResult.outcome == 'dismissed') {
+		console.log('User cancelled home screen install');
+	  }
+	  else {
+		console.log('User added to home screen');
+	  }
+	});
+  });

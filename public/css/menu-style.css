@@ -121,5 +121,15 @@
 	text-align: center;
 }
 
+#cancelarBusca{
+	width: 155px;
+	display: none;
+	margin-right: 2%;
+	margin-left: 2%;
+	margin-top: 10px;
+	margin-bottom: 5px;
+	text-align: center;
+}
+
 
 
