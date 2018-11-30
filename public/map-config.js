@@ -1,13 +1,13 @@
 
 //Conecção com o firebase
 const config = {
-	apiKey: "AIzaSyDuKKc8ksB76mmvzVvoY8P4vsi7Wrn5Wko",
-	authDomain: "ultimo-f7d1e.firebaseapp.com",
-	databaseURL: "https://ultimo-f7d1e.firebaseio.com",
-	projectId: "ultimo-f7d1e",
-	storageBucket: "ultimo-f7d1e.appspot.com",
-	messagingSenderId: "303544299270"
-};
+    apiKey: "AIzaSyCRJnI_QGAQTxpEnrvV-aA5YQPdS6-vaG8",
+    authDomain: "aqui-tem-esporte.firebaseapp.com",
+    databaseURL: "https://aqui-tem-esporte.firebaseio.com",
+    projectId: "aqui-tem-esporte",
+    storageBucket: "aqui-tem-esporte.appspot.com",
+    messagingSenderId: "618796704244"
+  };
 firebase.initializeApp(config);
 
 const db = firebase.database(); //buscando informações do database.
@@ -284,6 +284,7 @@ ref.on('value', function(snapshotPracas){ //|Referencía e liga(atribui) o data 
 		document.querySelector("#list-esportes").onclick = (e) =>{
 			let resultClick = e.target.id;
 			filtroModalidade(snapshotPracas, resultClick);
+			document.getElementById("card-categoria-esportes").style.display = "none";
 		}
 
 //criacao dos marcadores no mapa
